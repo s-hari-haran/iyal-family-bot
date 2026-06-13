@@ -6,15 +6,34 @@ It enables family members to log transactions, query budgets, save towards goals
 
 ---
 
-## Technical Stack & Architecture
+## Models & Tech Stack
 
-- **Voice & Conversation Orchestration**: [Bolna](https://bolna.ai) Voice AI engine with custom API tool integration.
-- **Backend API Layer**: **FastAPI** (Python 3.10+) running uvicorn. Handles business logic, identity resolution, budget checks, and background insights.
-- **Frontend Dashboard**: **Next.js** (React) with Tailwind CSS and Lucide icons.
-- **Persistence (Dual-Mode Database)**: 
-  - **SQLite**: Local file database (`family_memory.db`) for offline development/dry runs.
-  - **Supabase**: Cloud PostgreSQL database for production deployments.
-- **telephony integration**: Dialing in/out via Bolna telephony. Inbound number: `+919262171465`.
+### 🤖 Voice AI Models & Agent Configuration
+- **Voice AI Platform**: [Bolna](https://bolna.ai) Voice AI engine with custom API tool integration.
+- **Large Language Model (LLM)**: `gpt-4o-mini` (via Azure OpenAI)
+  - *Used for real-time conversational reasoning, transaction extraction, and multilingual translation.*
+- **Speech-to-Text (STT)**: Deepgram (`nova-3` model)
+  - *Provides ultra-low latency transcription across English, Hindi, Tamil, Telugu, and Malayalam.*
+- **Text-to-Speech (TTS)**: ElevenLabs (`eleven_turbo_v2_5`)
+  - *Configured with the "Devi" voice profile for a natural, culturally-resonant Indian accent.*
+- **Agent IDs**:
+  - *Primary Agent*: `b196f7c8-7fb6-4880-9984-4b430e4c01a9`
+
+### ⚙️ Backend Architecture (The Brain)
+- **Framework**: FastAPI (Python 3.10+) running uvicorn.
+- **Role**: Handles business logic, identity resolution, budget checks, real-time database commits, and background insights.
+- **Hosting**: Render (Web Service)
+
+### 💻 Frontend Architecture (The Dashboard)
+- **Framework**: Next.js (React 19)
+- **Styling**: Vanilla CSS + `lucide-react` for iconography.
+- **Role**: A responsive, live-updating dashboard to view financial history, goals, and real-time transcripts.
+- **Hosting**: Vercel
+
+### 🗄️ Database
+- **Provider**: Supabase (PostgreSQL)
+  - *(Also supports local SQLite `family_memory.db` for offline development)*
+- **Role**: Persists the family money memory. Stores members, shared budgets, active debts, savings goals, and raw voice-call transcripts for auditability.
 
 ---
 
