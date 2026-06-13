@@ -1,0 +1,205 @@
+{
+  "agent_config": {
+    "agent_name": "Family Financial Memory OS Assistant",
+    "agent_welcome_message": "Hello! Welcome back to your family money memory. Who is speaking today, and how can I help you?",
+    "webhook_url": "https://api.yourdomain.com/api/webhook/bolna",
+    "telephony_provider": "plivo",
+    "calling_guardrails": {
+      "allowed_hours": {
+        "start": "09:00",
+        "end": "20:00"
+      }
+    }
+  },
+  "tasks": [
+    {
+      "task_type": "conversation",
+      "task_config": {
+        "hangup_after_silence": 7,
+        "call_terminate": 300,
+        "backchanneling": true,
+        "number_of_words_for_interruption": 2,
+        "ambient_noise_track": "coffee-shop",
+        "voicemail": true,
+        "call_cancellation_prompt": "Goodbye! I have saved your details to your family memory. Talk to you soon."
+      },
+      "tools_config": {
+        "api_tools": [
+          {
+            "name": "record_expense",
+            "description": "Logs an expense. Use this tool when the user spent money on grocery, rent, utilities, fuel, or tuition.",
+            "key": "custom_task",
+            "method": "POST",
+            "url": "http://localhost:8000/api/tools/record-expense",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "phone_number": {
+                  "type": "string",
+                  "description": "Caller ID phone number"
+                },
+                "member_name": {
+                  "type": "string",
+                  "description": "Confirmed speaker name (e.g. Ramesh, Sunita)"
+                },
+                "amount": {
+                  "type": "number",
+                  "description": "Amount spent in INR"
+                },
+                "category": {
+                  "type": "string",
+                  "description": "Category: groceries, utilities, rent, fuel, tuition, misc"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "What did they buy?"
+                },
+                "date": {
+                  "type": "string",
+                  "description": "Date YYYY-MM-DD"
+                },
+                "call_id": {
+                  "type": "string",
+                  "description": "Call ID parameter"
+                },
+                "confidence": {
+                  "type": "number",
+                  "description": "Voice recognition confidence level (0.0 to 1.0)"
+                }
+              },
+              "required": [
+                "phone_number",
+                "amount",
+                "category",
+                "call_id"
+              ]
+            }
+          },
+          {
+            "name": "record_debt",
+            "description": "Logs borrowing or lending transactions. Lender name and borrower name must be extracted.",
+            "key": "custom_task",
+            "method": "POST",
+            "url": "http://localhost:8000/api/tools/record-debt",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "phone_number": {
+                  "type": "string"
+                },
+                "member_name": {
+                  "type": "string"
+                },
+                "lender_name": {
+                  "type": "string"
+                },
+                "borrower_name": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "due_date": {
+                  "type": "string"
+                },
+                "note": {
+                  "type": "string"
+                },
+                "call_id": {
+                  "type": "string"
+                },
+                "confidence": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "phone_number",
+                "lender_name",
+                "borrower_name",
+                "amount",
+                "call_id"
+              ]
+            }
+          },
+          {
+            "name": "budget_status",
+            "description": "Queries the remaining amount in a category budget limit.",
+            "key": "custom_task",
+            "method": "POST",
+            "url": "http://localhost:8000/api/tools/budget-status",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "phone_number": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "phone_number",
+                "category"
+              ]
+            }
+          },
+          {
+            "name": "get_financial_literacy",
+            "description": "Explains simple safe Indian financial products: PPF, FD, RD, Sukanya Samriddhi Yojana, compound interest, emergency funds. Prohibits advice on stocks, crypto, or predictions.",
+            "key": "custom_task",
+            "method": "POST",
+            "url": "http://localhost:8000/api/tools/get-financial-literacy",
+            "parameters": {
+              "type": "object",
+              "properties": {
+                "query": {
+                  "type": "string",
+                  "description": "Topic or concept to explain"
+                }
+              },
+              "required": [
+                "query"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "audio_config": {
+    "primary_language": "en",
+    "secondary_languages": [
+      "hi",
+      "ta",
+      "ml",
+      "te"
+    ],
+    "providers": {
+      "en": {
+        "stt": "deepgram",
+        "tts": "azure",
+        "voice": "en-IN-NeerjaNeural"
+      },
+      "hi": {
+        "stt": "sarvam",
+        "tts": "azure",
+        "voice": "hi-IN-MadhurNeural"
+      },
+      "ta": {
+        "stt": "deepgram",
+        "tts": "elevenlabs",
+        "voice": "Nila"
+      },
+      "ml": {
+        "stt": "deepgram",
+        "tts": "azure",
+        "voice": "ml-IN-SobhanaNeural"
+      },
+      "te": {
+        "stt": "deepgram",
+        "tts": "azure",
+        "voice": "te-IN-ShrutiNeural"
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: iyal-family-bot-api
+    env: python
+    buildCommand: "pip install -r backend/requirements.txt"
+    startCommand: "uvicorn backend.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_KEY
+        sync: false
+      - key: BOLNA_API_KEY
+        sync: false
+      - key: IS_LOCAL_MODE
+        value: "false"
+      - key: PORT
+        value: 10000
