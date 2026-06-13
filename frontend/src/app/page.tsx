@@ -33,7 +33,8 @@ import {
   Lock, 
   PhoneCall,
   Send,
-  Pencil
+  Pencil,
+  Info
 } from "lucide-react";
 
 // Autoritative Mock Fallback Data representing family memory when database is cleared
@@ -1123,10 +1124,41 @@ export default function ConsumerDashboard() {
             <h2>Good Evening, {familyName}</h2>
             <p>Here is your financial status overview</p>
           </div>
-          <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px", position: "relative" }}>
+            <div className="info-tooltip-container" style={{ position: "relative", cursor: "help", display: "flex", alignItems: "center" }}>
+              <Info size={20} color="hsl(var(--text-muted))" />
+              <div className="info-tooltip" style={{
+                position: "absolute",
+                top: "100%",
+                right: "0",
+                marginTop: "10px",
+                width: "320px",
+                backgroundColor: "#fff",
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "12px",
+                padding: "16px",
+                boxShadow: "0 10px 25px rgba(0,0,0,0.1)",
+                zIndex: 100,
+                display: "none",
+                flexDirection: "column",
+                gap: "8px"
+              }}>
+                <h4 style={{ margin: 0, fontSize: "0.95rem", fontWeight: 700, color: "hsl(var(--text-primary))" }}>How to use this platform:</h4>
+                <ol style={{ margin: 0, paddingLeft: "20px", fontSize: "0.85rem", color: "hsl(var(--text-secondary))", lineHeight: 1.5, display: "flex", flexDirection: "column", gap: "6px" }}>
+                  <li><strong>Call Bolna:</strong> Dial the inbound number to reach your AI assistant.</li>
+                  <li><strong>Identify:</strong> Tell the AI your name (e.g. "I am Guest").</li>
+                  <li><strong>Log:</strong> Say what you spent or borrowed (e.g. "I spent 500 on fuel").</li>
+                  <li><strong>Review:</strong> View your live transactions appearing on this dashboard instantly.</li>
+                </ol>
+              </div>
+              <style dangerouslySetInnerHTML={{__html: `
+                .info-tooltip-container:hover .info-tooltip { display: flex !important; }
+                .info-tooltip-container:hover svg { color: hsl(var(--accent-green)) !important; }
+              `}} />
+            </div>
             <select 
               className="family-dropdown"
-              style={{ fontSize: "0.85rem", padding: "6px 12px" }}
+              style={{ fontSize: "0.85rem", padding: "6px 12px", margin: 0 }}
               value={selectedFamily}
               onChange={(e) => setSelectedFamily(e.target.value)}
             >
